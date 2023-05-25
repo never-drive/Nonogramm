@@ -1,4 +1,4 @@
-from combinations import Combinations
+from services.combinations import Combinations
 
 
 def test_generate_pos():

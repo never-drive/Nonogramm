@@ -1,4 +1,4 @@
-class CellFieldPrinter:
+class Printer:
 
     @staticmethod
     def print_nonogramm(field):
@@ -8,9 +8,11 @@ class CellFieldPrinter:
             line = field.get_row_line(i)
             text += line.cells_as_text() + ' ' + line.blocks_as_text() + '\n'
             col_defs.append(field.get_col_line(i).get_blocks())
-        text += CellFieldPrinter._create_lines(col_defs) + '\n'
+        text += Printer._create_lines(col_defs) + '\n'
         text += field.combination_counts_as_text() + '\n'
         print(f'{text}')
+        if field.is_invalid():
+            print('nono is invalid --> undo last step!\n')
 
     @staticmethod
     def _create_lines(cols):

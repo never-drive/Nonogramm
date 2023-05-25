@@ -1,14 +1,14 @@
-from cell import Cell
-from combinations import Combinations
+from models.cell import Cell
+from services.combinations import Combinations
 
 
-class CellLine:
+class Line:
 
     def __init__(self, cells: list[Cell], blocks: list[int], nr: int = -1):
         self._cells = cells
         self._blocks = blocks
         self._nr = nr
-        self._combinations = CellLine.create_all_combinations(self.get_dim(), blocks)
+        self._combinations = Line.create_all_combinations(self.get_dim(), blocks)
         self._combinations_for_cells = []
 
     @classmethod
@@ -129,7 +129,7 @@ class CellLine:
 
 
 if __name__ == '__main__':
-    line = CellLine.create(11, [3, 4, 1])
+    line = Line.create(11, [3, 4, 1])
     all_combinations = line.get_combinations()
     for combi in all_combinations:
         print('|'.join(combi))

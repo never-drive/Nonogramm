@@ -1,9 +1,8 @@
-from cell import Cell
-from cell_field_printer import CellFieldPrinter
-from cell_line import CellLine
+from models.cell import Cell
+from models.line import Line
 
 
-class CellField:
+class Field:
 
     def __init__(self, dim: int, block_defs: list[list[int]]):
         self._block_defs = block_defs
@@ -17,7 +16,7 @@ class CellField:
             for x in range(dim):
                 row_cells.append(Cell(x, y))
             all_cells += row_cells
-            row_lines.append(CellLine(row_cells, row_defs[y], y))
+            row_lines.append(Line(row_cells, row_defs[y], y))
 
         col_lines = []
         for x in range(dim):
@@ -29,7 +28,7 @@ class CellField:
                 assert cell.get_x() == x
                 assert cell.get_y() == y
                 col_cells.append(cell)
-            col_lines.append(CellLine(col_cells, col_defs[x], x))
+            col_lines.append(Line(col_cells, col_defs[x], x))
 
         self._dim = dim
         self._all_cells = all_cells
@@ -106,33 +105,6 @@ class CellField:
 
     # for solver to access...
 
-    def try_line(self, i: int, is_row: bool):
-        if self.is_complete():
-            print('solution found!\n')
-            self.update()
-            self.print()
-            return  # terminate solving...
-
-        line = self.get_row_line(i) if is_row else self.get_col_line(i)
-        max_combinations = line.get_combination_count_for_cells()
-        for n in range(max_combinations):
-            self.update_row(i, n) if is_row else self.update_col(i, n)
-            print('row:' if is_row else 'col:', i, 'updated')
-            if self.is_invalid():
-                self.go_back()
-            else:
-                # next step
-                if not is_row:
-                    i += 1
-                if i >= self._dim:
-                    i = 0
-                self.try_line(i, not is_row)
-        # no solution for current step
-        if self.can_go_back():
-            self.go_back()
-        else:
-            print('no solution found!\n')
-
     def update_row(self, y: int, nr: int):
         self.push()
         line = self.get_row_line(y)
@@ -149,7 +121,6 @@ class CellField:
         return len(self._steps) > 0
 
     def go_back(self):
-        self.print()
         self.pop()
         self.update()
 
@@ -159,15 +130,10 @@ class CellField:
         for line in self._col_lines:
             line.set_cells_if_possible()
 
-    def print(self):
-        CellFieldPrinter.print_nonogramm(self)
-        if self.is_invalid():
-            print('nono is invalid --> undo last step!\n')
-
-    def get_row_line(self, y: int) -> CellLine:
+    def get_row_line(self, y: int) -> Line:
         return self._row_lines[y]
 
-    def get_col_line(self, x: int) -> CellLine:
+    def get_col_line(self, x: int) -> Line:
         return self._col_lines[x]
 
     def push(self):
