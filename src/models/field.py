@@ -4,7 +4,7 @@ from models.line import Line
 
 class Field:
 
-    def __init__(self, dim: int, block_defs: list[list[int]]):
+    def __init__(self, dim: int, block_defs: {list[list[int]]}):
         self._block_defs = block_defs
         row_defs = block_defs['rows']
         col_defs = block_defs['cols']
@@ -35,6 +35,8 @@ class Field:
         self._row_lines = row_lines
         self._col_lines = col_lines
         self._steps = []
+        self._solutions = []
+        self._update()
 
     def get_dim(self):
         return self._dim
@@ -46,6 +48,10 @@ class Field:
         for line in self._col_lines:
             if not line.is_complete():
                 return False
+
+        # solution found -> keept it!
+        self.add_solution()
+
         return True
 
     def is_invalid(self):
@@ -109,22 +115,22 @@ class Field:
         self.push()
         line = self.get_row_line(y)
         line.set_combination(nr)
-        self.update()
+        self._update()
 
     def update_col(self, x: int, nr: int):
         self.push()
         line = self.get_col_line(x)
         line.set_combination(nr)
-        self.update()
+        self._update()
 
     def can_go_back(self):
         return len(self._steps) > 0
 
     def go_back(self):
         self.pop()
-        self.update()
+        self._update()
 
-    def update(self):
+    def _update(self):
         for line in self._row_lines:
             line.set_cells_if_possible()
         for line in self._col_lines:
@@ -136,16 +142,27 @@ class Field:
     def get_col_line(self, x: int) -> Line:
         return self._col_lines[x]
 
+    def add_solution(self):
+        values = self._collect_values()
+        self._solutions.append(values)
+
+    def solution_count(self):
+        return len(self._solutions)
+
     def push(self):
-        step = ''
-        for cell in self._all_cells:
-            step += cell.get_value()
-        self._steps.append(step)
+        values = self._collect_values()
+        self._steps.append(values)
 
     def pop(self):
         if len(self._steps) <= 0:
             return
-        step = self._steps.pop()
+        value = self._steps.pop()
         for i in range(len(self._all_cells)):
             cell = self._all_cells[i]
-            cell.set_value(step[i])
+            cell.set_value(value[i])
+
+    def _collect_values(self):
+        values = ''
+        for cell in self._all_cells:
+            values += cell.get_value()
+        return values

@@ -8,7 +8,6 @@ class Solver:
     def try_line(field: Field, i: int, is_row: bool):
         if field.is_complete():
             print('solution found!\n')
-            field.update()
             Solver.print_field(field)
             return  # terminate solving...
 

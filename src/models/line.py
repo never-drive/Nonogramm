@@ -115,15 +115,15 @@ class Line:
         if self.is_single():
             self.set_combination(0)
 
-    def set_combination(self, nr: int):
+    def set_combination(self, index: int):
         combinations = self._combinations_for_cells
-        if 0 <= nr < len(combinations):
+        if 0 <= index < len(combinations):
             pass
         else:
             print("komisch")
-            print(nr, len(combinations))
+            print(index, len(combinations))
         for i in range(self.get_dim()):
-            comb = combinations[nr]
+            comb = combinations[index]
             cell = self.get_cell(i)
             cell.set_value(comb[i])
 

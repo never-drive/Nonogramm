@@ -10,7 +10,6 @@ class FieldFactory:
             'cols': [[5], [1, 1], [3], [1, 1], [3]],
         }
         field = Field(5, block_definitions)
-        field.update()
         return field
 
     @staticmethod
@@ -20,7 +19,6 @@ class FieldFactory:
             'cols': [[3], [2, 1], [1, 1, 5], [1, 8], [2, 6], [3, 4], [2, 6], [1, 8], [1, 1, 5], [2, 3]],
         }
         field = Field(10, block_definitions)
-        field.update()
         return field
 
     @staticmethod
@@ -34,5 +32,4 @@ class FieldFactory:
                      [1, 4], [1, 5], [1, 2, 1], [2, 5, 1], [4, 2, 2]],
         }
         field = Field(15, block_definitions)
-        field.update()
         return field
