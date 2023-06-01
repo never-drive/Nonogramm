@@ -6,4 +6,4 @@
 
 ## Working directory
 
-- `./src`
+- `./backend`
